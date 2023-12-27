@@ -1,0 +1,348 @@
+<!-- Coffee Shop Web page, performes CRUD operations -->
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Coffee Shop</title>
+    <!-- Ajax -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- responsive behavior -->  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->  
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <style>
+ 
+      table{  background-color: white;  border-radius: 5px; border: 2px;  border-style: outset;}
+ 
+      th{ border: 2px solid #6F4E37;  padding: 5px;  text-align: center;  color: black;  background-color: white  }
+
+      td{ border: 1px solid #6F4E37;  padding: 5px;  text-align: center;  color: black}
+ 
+      .button{  border: none;  border-radius: 3px;  background-color: #6F4E37;  color: white;}
+
+      .create-button{ background-color: #6F4E37}
+
+      .cancel-button{ background-color: lightgray; color: black}
+      .showUpdate{  background-color: #dc967c; color: black}
+      .doDelete{  background-color: azure; color: black}
+
+      h2{ border-style: solid; background-color: olivedrab; text-align: center; color:white; font-size: 1.25em;}
+
+      .bg-colour{ background-color: olivedrab;}
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+      <div class="p-2 bg-colour text-white text-center">
+        <p>FREE DELIVERY IN IRELAND WHEN ORDER €100 OR MORE</p>
+      </div>
+      <div class="col-12 text-center">
+        <!-- Logo image -->
+        <img src="images/logo.jpg" alt="LogoImage" class="img-fluid" width="100">
+      </div>
+      <div class="col-12 text-center">
+        <!-- Coffee image -->
+        <img src="images/coffee.jpg" alt="CoffeeImage" class="img-fluid" width="400">
+      </div>
+      </br>
+
+<!-- Create/Update table code-->
+<div id = "create-update" style = "display:none" class = "text-center">
+  <h2>ADD NEW COFFEE</h2>
+
+  <table id = "createUpdateForm" class="mx-auto d-flex p-2">
+    <tr>
+      <td><input type = "hidden" name= "id" id = "idinput"></td>
+    </tr>
+    <tr>
+      <td>Coffee Name</td>
+      <td><input type = "text" name = "CoffeeName"></td>
+    </tr>
+    <tr>
+      <td>Origin</td>
+      <td><input type = "text" name = "Origin"></td>
+    </tr>
+    <tr>
+      <td>Variety</td>
+      <td><input type = "text" name = "Variety"></td>
+    </tr>
+    <tr>
+      <td>Roast</td>
+      <td><input type = "text" name = "Roast"></td>
+    </tr>
+    <tr>
+      <td>Price</td>
+      <td><input type = "text" name = "Price"></td>
+    </tr>
+
+    <tr>
+      <td><button id = "create-button" onclick = "doCreate()" class="button create-button"> Create Coffee</button></td>
+      <td><button id = "update-button" onclick = "doUpdate()" class="button create-button"> Update Coffee</button></td>
+      <td><button id = "cancel-button" onclick = "doCancel()" class="button cancel-button"> Cancel</button></td>
+
+    </tr>
+
+  </table>
+</div>
+
+
+<!-- product database table -->
+
+<div id = "display" class="col-12 text-center">
+  <h2 style = "color:white">COFFEE SHOP</h2>
+  <button onclick = "showCreate()" class = "button"> Add Coffee</button>
+  <p>Click this button to add a new coffee</p>
+  <table style = "width:70%" id = "coffeeTable" class = "mx-auto">
+    <tr>
+      <th>Id</th>
+      <th>Coffee Name</th>
+      <th>Origin</th>
+      <th>Variety</th>
+      <th>Roast</th>
+      <th>Price</th>
+      <th>Update Coffee</th>
+      <th>Delete Coffee</th>
+    </tr>
+  </table>
+
+</div>
+
+<!-- Script Functions-->
+
+<script>
+
+    //This section decides what is displayed and hidden 
+    function showCreate(){
+      document.getElementById("display").style.display= "none"
+      document.getElementById("update-button").style.display = "none"
+      document.getElementById("create-button").style.display = "block"
+      document.getElementById("create-update").style.display = "block"
+    }
+    
+    //Display the update form 
+    function showUpdate(thisElem){
+      var rowElement = thisElem.parentNode.parentNode;
+      //create coffee object
+      coffee = getCoffeeFromRow(rowElement)
+      populateForm(coffee)
+
+      document.getElementById("display").style.display= "none"
+      document.getElementById("update-button").style.display = "block"
+      document.getElementById("create-button").style.display = "none"
+      document.getElementById("create-update").style.display = "block"
+  
+    }
+    //This function reads the data from the database by id 
+    function getCoffeeFromRow(rowElement){
+        coffee = {}
+        coffee.id  = rowElement.getAttribute("id");
+        coffee.CoffeeName = rowElement.cells[1].firstChild.textContent
+        coffee.Origin = rowElement.cells[2].firstChild.textContent
+        coffee.Variety = rowElement.cells[3].firstChild.textContent
+        coffee.Roast = rowElement.cells[4].firstChild.textContent
+        coffee.Price = rowElement.cells[5].firstChild.textContent
+        return coffee
+
+    }
+    
+    // This function pulls data from form and updates server and database
+    function doUpdate(){
+      coffee = getCoffeeFromForm()
+      updateServer(coffee)
+      
+    }
+    //Cancel no submittions
+    function doCancel(){
+      showDisplay()
+      clearForm()
+
+    }
+    //This function updates the the server
+    function updateServer(coffee){
+      $.ajax({
+        url:"http://127.0.0.1:8080/home/" + coffee.id,
+        data: JSON.stringify(coffee),
+        method:"PUT",
+        dataType:"JSON",
+        contentType:"application/json;charset = utf-8",
+        success:function(results){
+          console.log("update", results)
+          updateTableRow(coffee)
+          showDisplay()
+          clearForm()
+
+        },
+        error:function(xhr, status, error){
+          console.log("error" + error)
+        }
+      }
+      )
+
+    }
+    //This function updates a table row
+    function updateTableRow(coffee){
+      rowElement= document.getElementById(coffee.id)
+      rowElement.cells[1].firstChild.textContent = coffee.CoffeeName
+      rowElement.cells[2].firstChild.textContent = coffee.Origin
+      rowElement.cells[3].firstChild.textContent = coffee.Variety
+      rowElement.cells[4].firstChild.textContent = coffee.Roast
+      rowElement.cells[5].firstChild.textContent = coffee.Price
+
+    }
+
+    //This function populates the form
+    function populateForm(coffee){
+      var form = document.getElementById("createUpdateForm")
+      form.querySelector('input[name = "id"]').value = coffee.id
+      form.querySelector('input[name = "id"]').disabled= true
+      form.querySelector('input[name = "CoffeeName"]').value = coffee.CoffeeName
+      form.querySelector('input[name = "Origin"]').value = coffee.Origin
+      form.querySelector('input[name = "Variety"]').value = coffee.Variety
+      form.querySelector('input[name = "Roast"]').value = coffee.Roast
+      form.querySelector('input[name = "Price"]').value =  coffee.Price    
+
+    }
+    
+    //This function clears the form after inputting data
+    function clearForm(){
+      var form = document.getElementById("createUpdateForm")
+      form.querySelector('input[name = "id"]').value = ''
+      form.querySelector('input[name = "id"]').disabled= false
+      form.querySelector('input[name = "CoffeeName"]').value = ''
+      form.querySelector('input[name = "Origin"]').value = ''
+      form.querySelector('input[name = "Variety"]').value = ''
+      form.querySelector('input[name = "Roast"]').value = ''
+      form.querySelector('input[name = "Price"]').value = ''
+
+    }
+
+    //This function creates a coffee object and sends it to the server, and on to the database
+    function doCreate(){
+      coffee = getCoffeeFromForm()
+
+      $.ajax({
+          url: "http://127.0.0.1:8080/home",
+          method:"POST",
+          data:JSON.stringify(coffee),
+          dataType: "JSON",
+          contentType: "application/json; charset=utf-8",
+          success:function(results){
+              addCoffeeToTable(coffee)
+              showDisplay()
+              clearForm()
+              location.reload()
+            },
+            error:function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        })
+        showDisplay()
+
+    }
+
+    //This function deletes a row from the server and the database
+    function doDelete(thisElem){
+      var tableElement = document.getElementById("coffeeTable");
+      var rowElement = thisElem.parentNode.parentNode;
+      var index =  rowElement.rowIndex;
+      id = rowElement.getAttribute("id");
+      $.ajax({
+        url: "http://127.0.0.1:8080/home/" + id,
+        method:"DELETE",
+        dataType: "JSON",
+        success:function(results){
+              tableElement.deleteRow(index)
+                  
+            },
+            error:function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        })
+
+    }
+
+    function showDisplay(){
+      document.getElementById('display').style.display="block"
+      document.getElementById('create-update').style.display="none"
+
+    }
+    //This function populates the table displayed on the webpage 
+    function populateTable(){
+      $.ajax({
+            url: "http://127.0.0.1:8080/home",
+            method:"GET",
+            dataType: "JSON",
+            success:function(results){
+                for (coffee of results){
+                    addCoffeeToTable(coffee);
+                }
+                
+            },
+            error:function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+
+    }
+    //This function gets coffee record from the form
+    function getCoffeeFromForm(){
+      var form = document.getElementById("createUpdateForm")
+      coffee = {}
+      coffee.id = form.querySelector('input[name = "id"]').value
+      form.querySelector('input[name = "id"]').disabled= true
+      coffee.CoffeeName= form.querySelector('input[name = "CoffeeName"]').value
+      coffee.Origin = form.querySelector('input[name = "Origin"]').value 
+      coffee.Variety = form.querySelector('input[name = "Variety"]').value
+      coffee.Roast = form.querySelector('input[name = "Roast"]').value
+      coffee.Price = form.querySelector('input[name = "Price"]').value
+
+      return coffee
+
+    }
+
+    //This function adds a coffee to the table
+    function addCoffeeToTable(coffee){
+          tableElement = document.getElementById("coffeeTable")
+          rowElement= tableElement.insertRow(-1)
+          rowElement.setAttribute("id",coffee.id)
+          cell1 = rowElement.insertCell(0);
+          cell1.innerHTML = coffee.id
+
+          cell2 = rowElement.insertCell(1);
+          cell2.innerHTML = coffee.CoffeeName
+
+          cell3 = rowElement.insertCell(2);
+          cell3.innerHTML = coffee.Origin
+
+          cell4 = rowElement.insertCell(3);
+          cell4.innerHTML = coffee.Variety
+
+          cell5 = rowElement.insertCell(4);
+          cell5.innerHTML = coffee.Roast
+          
+          cell6 = rowElement.insertCell(5);
+          cell6.innerHTML = coffee.Price
+          
+          cell7 = rowElement.insertCell(6);
+          cell7.innerHTML = '<button onclick = "showUpdate(this)" class = "button showUpdate">Update</button>'
+          
+          cell8 = rowElement.insertCell(7);
+          cell8.innerHTML = '<button onclick = "doDelete(this)" class = "button doDelete">Delete</button>'
+          
+        }
+      //This call populate the table from the database
+      populateTable()       
+      
+        
+</script>
+</body>    
+</html>
+    
+

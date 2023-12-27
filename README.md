@@ -10,3 +10,7 @@ This repository contains the project folder for a Flask server API project for t
 The repository contains the following :
 1. A README file    
 2. server.py
+3. productDAO.py
+4. dbconfif.py
+5. productDB.sql
+6. staticpages folder
