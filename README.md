@@ -5,12 +5,16 @@ Student: G00411367
 
 This repository contains the project folder for a Flask server API project for the module Data Representation, Winter 2023/2024.
 
+***
+Objective
+
+
 ### The Repository
 ***
 The repository contains the following :
 1. A README file    
-2. server.py
-3. productDAO.py
-4. dbconfif.py
-5. productDB.sql
-6. staticpages folder
+2. server.py        Flask server
+3. productDAO.py    Data Access Object file that interacts with MySQL database
+4. dbconfig.py      Config template for connecting with MySQL
+5. productDB.sql    MySQL script to create a database and tables
+6. staticpages      Folder containg the HTML home page and images
