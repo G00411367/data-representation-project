@@ -23,3 +23,4 @@ INSERT INTO product_table (CoffeeName, Origin, Variety, Roast, Price) VALUES ("C
 INSERT INTO product_table (CoffeeName, Origin, Variety, Roast, Price) VALUES ("Perleo Espresso", "Guatemala", "Blend", "Medium Roast", 24.5);
 INSERT INTO product_table (CoffeeName, Origin, Variety, Roast, Price) VALUES ("Caffe Vergnano", "Kenya", "Arabica", "Dark Roast", 29.9);
 INSERT INTO product_table (CoffeeName, Origin, Variety, Roast, Price) VALUES ("Don Marco", "Brazil", "Blend", "Light Roast", 24.5);
+

@@ -94,7 +94,6 @@
 
 
 <!-- product database table -->
-
 <div id = "display" class="col-12 text-center">
   <h2 style = "color:white">COFFEE SHOP</h2>
   <button onclick = "showCreate()" class = "button"> Add Coffee</button>
@@ -164,7 +163,7 @@
       clearForm()
 
     }
-    //This function updates the the server
+    //This function updates the server
     function updateServer(coffee){
       $.ajax({
         url:"http://127.0.0.1:8080/home/" + coffee.id,
@@ -223,7 +222,7 @@
 
     }
 
-    //This function creates a coffee object and sends it to the server, and on to the database
+    //This function creates a coffee object and sends it to the server, and to the database
     function doCreate(){
       coffee = getCoffeeFromForm()
 

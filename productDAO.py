@@ -123,32 +123,10 @@ class CoffeeDAO:
                 coffee[colName]= value
             return coffee
 
-    # This function creates a table. It can be used, although a sql query was written to load all data into the table
-    def createTable(self):
-            cursor = self.getCursor()
-            sql = f"create table {self.table} (id int AUTO_INCREMENT NOT NULL PRIMARY KEY, CoffeeName varchar(250), Origin varchar(250), Variety varchar (250), Roast varchar(250), Price float)"
-            cursor.execute(sql)
-
-            self.connection.commit()
-            self.closeAll()
-    # Function to create a database. It can be used, although a sql query was written to create a database and load all data into the table
-    def createDatabase(self):
-        self.connection = mysql.connector.connect(
-            host = self.host,
-            user = self.user,
-            password = self.password   
-        )
-        self.cursor = self.connection.cursor()
-        sql= f"create database {self.database}"
-        self.cursor.execute(sql)
-        self.connection.commit()
-        self.closeAll()
-
+  
 # creates a new class
 coffeeDAO = CoffeeDAO()    
 
 if __name__== "__main__":
 
-    #coffeeDAO.createDatabase()
-    #coffeeDAO.createTable()
     print("The Coffee Shop")

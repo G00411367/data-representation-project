@@ -4,4 +4,5 @@ mysql = {
 "password" : "root",
 "database" : "datarep",
 "table": "product_table"
+
 }
